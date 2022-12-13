@@ -1,0 +1,23 @@
+type nano sudo-pro
+In nano paste 
+#!/bin/bash
+
+# Get the list of users in the sudo group
+sudoers=$(grep -Eo '(?<=^sudo:).*$' /etc/group)
+
+# Loop through each user in the sudo group
+for user in $sudoers; do
+  # Check if the user is authorized to use sudo
+  if ! sudo -l -U $user | grep -q 'may run the following commands on'; then
+    # If not authorized, append the user to the "" group
+    # (i.e. remove the user from the sudo group)
+    usermod -a -G "" $user
+    echo "Removed unauthorized user $user from the sudo group"
+  fi
+done
+
+
+
+To make it able to be run use the command chmod 755 sudo-pro
+To add it to your commands list type sudo cp ./sudo-pro /usr/bin
+Then to run simply type sudo-pro
