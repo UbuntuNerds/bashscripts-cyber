@@ -1,4 +1,24 @@
 #!/bin/bash
+R='\033[0;31m'
+G='\033[0;32m'
+Y='\033[1;32m'
+B='\033[0;34m'
+# This script is primarily made by Corbin Parrish.
+# Credit goes to Corbin Parrish,
+# Unless otherwise stated.
+updatescript(){
+	apt install plocate -y
+	updatedb
+}
+reinstall(){
+	echo "Enter name of what you wish to reinstall"
+	read -p "> " reinst
+	echo "Reinstalling $reinst"
+		apt purge $reinst -y
+		apt install $reinst -y
+pause
+}
+currentdirectory=$(pwd)
 critservices(){
 	clear
 	echo "These are your current system services:"
@@ -6,12 +26,12 @@ critservices(){
 	while true; do
 	echo "Enter name of service to add, or type n to quit"
 	read -p "> " servicename
-		if [$servicename =~ n]; then
+		if [ $servicename == "n" ]; then
 			pause
 			return
 		else
-		        apt install "$servicename"
-	        systemctl enable "$servicename"
+		        apt install "$servicename" -y
+	        	systemctl enable "$servicename"
 		fi
 	done
 pause
@@ -49,7 +69,6 @@ do
 done
 pause
 }
-echo "******* Session Start *******" >> ubuntoollog
 makeusers(){
 	echo "Enter the name of the user you would like to add."
 	read -p "> " newuser
@@ -62,16 +81,6 @@ makeusers(){
 echo "$newuser added as $as"
 echo "$newuser added as $as" >> ubuntoollog
 
-pause
-}
-clearlogs(){
-	clear
-	echo "Are you sure you want to do this? [yN]"
-	read -p "> " yn
-	case $yn in
-		y) rm -f ubuntoollog;;
-		n) echo "Action cancelled";;
-	esac
 pause
 }
 viewlogs(){
@@ -135,38 +144,14 @@ pause(){
 update(){
 clear
 		echo "Updating..."
-		sudo add-apt-repository -y ppa:libreoffice/ppa
-		wait
-		sudo apt-get update -y
-		wait
-		sudo apt-get upgrade -y
-		wait
-		sudo apt-get dist-upgrade -y
-		wait
-		killall firefox
-		wait
-		sudo apt-get --purge --reinstall install firefox -y
-		wait
-		sudo apt-get install clamtk -y
-		wait
-
-		##Set daily updates
-		sed -i -e 's/APT::Periodic::Update-Package-Lists.*\+/APT::Periodic::Update-Package-Lists "1";/' /etc/apt/apt.conf.d/10periodic
-		sed -i -e 's/APT::Periodic::Download-Upgradeable-Packages.*\+/APT::Periodic::Download-Upgradeable-Packages "0";/' /etc/apt/apt.conf.d/10periodic
-	##Set "install security updates"
-			cat /etc/apt/sources.list | grep "deb http://security.ubuntu.com/ubuntu/ trusty-security universe main multiverse restricted"
-			if [ $? -eq 1 ]
-			then
-			echo "deb http://security.ubuntu.com/ubuntu/ trusty-security universe main multiverse restricted" >> /etc/apt/sources.list
-			fi
-
-			echo "###Automatic updates###"
-			cat /etc/apt/apt.conf.d/10periodic
-			echo ""
-			echo "###Important Security Updates###"
-			cat /etc/apt/sources.list
-			echo "Updates ran" >> ubuntoollog
-			pause
+		apt update
+		apt upgrade
+		apt install unattended-upgrades apt-listchanges bsd-mailx
+		dpkg-reconfigure -plow unattended-upgrades
+		apt purge firefox
+		apt install firefox
+		
+pause
 }
 usrConfig(){
 # Prompt the user for a list of admin users
@@ -275,44 +260,36 @@ for user in "${users_to_delete[@]}"; do
 done
 pause
 }
-test(){
-	echo test complete
-	echo "test complete" >> ubuntoollog
-	pause
-}
 menu(){
-echo "███████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████"
-echo "█░░░░░░██░░░░░░█░░░░░░░░░░░░░░███░░░░░░██░░░░░░█░░░░░░██████████░░░░░░█░░░░░░░░░░░░░░█░░░░░░░░░░░░░░█░░░░░░░░░░░░░░█░░░░░░█████████"
-echo "█░░▄▀░░██░░▄▀░░█░░▄▀▄▀▄▀▄▀▄▀░░███░░▄▀░░██░░▄▀░░█░░▄▀░░░░░░░░░░██░░▄▀░░█░░▄▀▄▀▄▀▄▀▄▀░░█░░▄▀▄▀▄▀▄▀▄▀░░█░░▄▀▄▀▄▀▄▀▄▀░░█░░▄▀░░█████████"
-echo "█░░▄▀░░██░░▄▀░░█░░▄▀░░░░░░▄▀░░███░░▄▀░░██░░▄▀░░█░░▄▀▄▀▄▀▄▀▄▀░░██░░▄▀░░█░░░░░░▄▀░░░░░░█░░▄▀░░░░░░▄▀░░█░░▄▀░░░░░░▄▀░░█░░▄▀░░█████████"
-echo "█░░▄▀░░██░░▄▀░░█░░▄▀░░██░░▄▀░░███░░▄▀░░██░░▄▀░░█░░▄▀░░░░░░▄▀░░██░░▄▀░░█████░░▄▀░░█████░░▄▀░░██░░▄▀░░█░░▄▀░░██░░▄▀░░█░░▄▀░░█████████"
-echo "█░░▄▀░░██░░▄▀░░█░░▄▀░░░░░░▄▀░░░░█░░▄▀░░██░░▄▀░░█░░▄▀░░██░░▄▀░░██░░▄▀░░█████░░▄▀░░█████░░▄▀░░██░░▄▀░░█░░▄▀░░██░░▄▀░░█░░▄▀░░█████████"
-echo "█░░▄▀░░██░░▄▀░░█░░▄▀▄▀▄▀▄▀▄▀▄▀░░█░░▄▀░░██░░▄▀░░█░░▄▀░░██░░▄▀░░██░░▄▀░░█████░░▄▀░░█████░░▄▀░░██░░▄▀░░█░░▄▀░░██░░▄▀░░█░░▄▀░░█████████"
-echo "█░░▄▀░░██░░▄▀░░█░░▄▀░░░░░░░░▄▀░░█░░▄▀░░██░░▄▀░░█░░▄▀░░██░░▄▀░░██░░▄▀░░█████░░▄▀░░█████░░▄▀░░██░░▄▀░░█░░▄▀░░██░░▄▀░░█░░▄▀░░█████████"
-echo "█░░▄▀░░██░░▄▀░░█░░▄▀░░████░░▄▀░░█░░▄▀░░██░░▄▀░░█░░▄▀░░██░░▄▀░░░░░░▄▀░░█████░░▄▀░░█████░░▄▀░░██░░▄▀░░█░░▄▀░░██░░▄▀░░█░░▄▀░░█████████"
-echo "█░░▄▀░░░░░░▄▀░░█░░▄▀░░░░░░░░▄▀░░█░░▄▀░░░░░░▄▀░░█░░▄▀░░██░░▄▀▄▀▄▀▄▀▄▀░░█████░░▄▀░░█████░░▄▀░░░░░░▄▀░░█░░▄▀░░░░░░▄▀░░█░░▄▀░░░░░░░░░░█"
-echo "█░░▄▀▄▀▄▀▄▀▄▀░░█░░▄▀▄▀▄▀▄▀▄▀▄▀░░█░░▄▀▄▀▄▀▄▀▄▀░░█░░▄▀░░██░░░░░░░░░░▄▀░░█████░░▄▀░░█████░░▄▀▄▀▄▀▄▀▄▀░░█░░▄▀▄▀▄▀▄▀▄▀░░█░░▄▀▄▀▄▀▄▀▄▀░░█"
-echo "█░░░░░░░░░░░░░░█░░░░░░░░░░░░░░░░█░░░░░░░░░░░░░░█░░░░░░██████████░░░░░░█████░░░░░░█████░░░░░░░░░░░░░░█░░░░░░░░░░░░░░█░░░░░░░░░░░░░░█"
-echo "███████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████"
+echo -e "${R} ███████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████"
+echo -e "${G} █░░░░░░██░░░░░░█░░░░░░░░░░░░░░███░░░░░░██░░░░░░█░░░░░░██████████░░░░░░█░░░░░░░░░░░░░░█░░░░░░░░░░░░░░█░░░░░░░░░░░░░░█░░░░░░█████████"
+echo -e "${B} █░░▄▀░░██░░▄▀░░█░░▄▀▄▀▄▀▄▀▄▀░░███░░▄▀░░██░░▄▀░░█░░▄▀░░░░░░░░░░██░░▄▀░░█░░▄▀▄▀▄▀▄▀▄▀░░█░░▄▀▄▀▄▀▄▀▄▀░░█░░▄▀▄▀▄▀▄▀▄▀░░█░░▄▀░░█████████"
+echo -e "${R} █░░▄▀░░██░░▄▀░░█░░▄▀░░░░░░▄▀░░███░░▄▀░░██░░▄▀░░█░░▄▀▄▀▄▀▄▀▄▀░░██░░▄▀░░█░░░░░░▄▀░░░░░░█░░▄▀░░░░░░▄▀░░█░░▄▀░░░░░░▄▀░░█░░▄▀░░█████████"
+echo -e "${G} █░░▄▀░░██░░▄▀░░█░░▄▀░░██░░▄▀░░███░░▄▀░░██░░▄▀░░█░░▄▀░░░░░░▄▀░░██░░▄▀░░█████░░▄▀░░█████░░▄▀░░██░░▄▀░░█░░▄▀░░██░░▄▀░░█░░▄▀░░█████████"
+echo -e "${B} █░░▄▀░░██░░▄▀░░█░░▄▀░░░░░░▄▀░░░░█░░▄▀░░██░░▄▀░░█░░▄▀░░██░░▄▀░░██░░▄▀░░█████░░▄▀░░█████░░▄▀░░██░░▄▀░░█░░▄▀░░██░░▄▀░░█░░▄▀░░█████████"
+echo -e "${R} █░░▄▀░░██░░▄▀░░█░░▄▀▄▀▄▀▄▀▄▀▄▀░░█░░▄▀░░██░░▄▀░░█░░▄▀░░██░░▄▀░░██░░▄▀░░█████░░▄▀░░█████░░▄▀░░██░░▄▀░░█░░▄▀░░██░░▄▀░░█░░▄▀░░█████████"
+echo -e "${G} █░░▄▀░░██░░▄▀░░█░░▄▀░░░░░░░░▄▀░░█░░▄▀░░██░░▄▀░░█░░▄▀░░██░░▄▀░░██░░▄▀░░█████░░▄▀░░█████░░▄▀░░██░░▄▀░░█░░▄▀░░██░░▄▀░░█░░▄▀░░█████████"
+echo -e "${B} █░░▄▀░░██░░▄▀░░█░░▄▀░░████░░▄▀░░█░░▄▀░░██░░▄▀░░█░░▄▀░░██░░▄▀░░░░░░▄▀░░█████░░▄▀░░█████░░▄▀░░██░░▄▀░░█░░▄▀░░██░░▄▀░░█░░▄▀░░█████████"
+echo -e "${R} █░░▄▀░░░░░░▄▀░░█░░▄▀░░░░░░░░▄▀░░█░░▄▀░░░░░░▄▀░░█░░▄▀░░██░░▄▀▄▀▄▀▄▀▄▀░░█████░░▄▀░░█████░░▄▀░░░░░░▄▀░░█░░▄▀░░░░░░▄▀░░█░░▄▀░░░░░░░░░░█"
+echo -e "${G} █░░▄▀▄▀▄▀▄▀▄▀░░█░░▄▀▄▀▄▀▄▀▄▀▄▀░░█░░▄▀▄▀▄▀▄▀▄▀░░█░░▄▀░░██░░░░░░░░░░▄▀░░█████░░▄▀░░█████░░▄▀▄▀▄▀▄▀▄▀░░█░░▄▀▄▀▄▀▄▀▄▀░░█░░▄▀▄▀▄▀▄▀▄▀░░█"
+echo -e "${B} █░░░░░░░░░░░░░░█░░░░░░░░░░░░░░░░█░░░░░░░░░░░░░░█░░░░░░██████████░░░░░░█████░░░░░░█████░░░░░░░░░░░░░░█░░░░░░░░░░░░░░█░░░░░░░░░░░░░░█"
+echo -e "${R} ███████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████"
 				echo ""
 				echo "Ubuntu cyberpatriot tool, Written by corbin parrish"
 				echo ""
-				echo "You are logged in as: $UserName"
+				echo "You are operating in $currentdirectory"
 				echo ""
 				echo "█▀█ █▀█ ▀█▀ █ █▀█ █▄░█ █▀"
 				echo "█▄█ █▀▀ ░█░ █ █▄█ █░▀█ ▄█"
-				echo ""
-				echo "1: Run a Test				2: Administrate users	        "
-				echo "3: Update and configure update settings	4: Exit				"
-				echo "5: Check the sudoers file		6: Instructions				"
-				echo "7: View Logs				8: Clear logs			"
-				echo "9: Add Users				10: Delete bad files		"
-				echo "11: List all hidden users			12: Download crit. services	"
-				echo ""
+				echo "[1] Update script dependencies    [2] View instructions"
+				echo "[3] Exit                          [4] View log file    "
+				echo "[5] Fix the sudoers file          [6] Make a user      "
+				echo "[7] List hidden users             [8] Delete media files "
+				echo "[9] Add critical services         [10] Delete and modify users"
+				echo "[11] Update system                [12] Reinstall a package"
 if [ "$UserName" != "root" ]
 then
 echo "It is required that you run this script as root."
-echo "$UserName attempted to run script as non-root user" >> ubuntoollog
 pause
 exitscript
 fi
@@ -324,31 +301,26 @@ fi
 
 read_options(){
 	read -p "> " choice
+		#these ar confusing. dont ask
         	case  $choice in
-                	1) test;;
-			2) usrConfig;;
-			3) update;;
-			4) exitscript;;
+                	1) updatescript;;
+			10) usrConfig;;
+			11) update;;
+			3) exitscript;;
 			5) sudofix;;
-			6) instructions;;
-			7) viewlogs;;
-			8) clearlogs;;
-			9) makeusers;;
-			10) delmedia;;
-			11) hiddenusers;;
-			12) critservices;;
+			2) instructions;;
+			4) viewlogs;;
+			6) makeusers;;
+			8) delmedia;;
+			7) hiddenusers;;
+			9) critservices;;
+			12) reinstall;;
         	esac
 
 }
-
-
-echo "Updating script databases..."
-	apt install plocate -y
-	updatedb
 while true
 do
 	clear
 	menu
 	read_options
 done
-
