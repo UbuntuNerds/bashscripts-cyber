@@ -3,8 +3,8 @@ R='\033[0;31m'
 G='\033[0;32m'
 Y='\033[1;32m'
 B='\033[0;34m'
-# This script is primarily made by Corbin Parrish.
-# Credit goes to Corbin Parrish,
+# This script is primarily made by Nobody65534
+# Credit goes to Nobody65534
 # Unless otherwise stated.
 updatescript(){
 	apt install plocate -y
