@@ -275,7 +275,7 @@ echo -e "${G} █░░▄▀▄▀▄▀▄▀▄▀░░█░░▄▀▄▀
 echo -e "${B} █░░░░░░░░░░░░░░█░░░░░░░░░░░░░░░░█░░░░░░░░░░░░░░█░░░░░░██████████░░░░░░█████░░░░░░█████░░░░░░░░░░░░░░█░░░░░░░░░░░░░░█░░░░░░░░░░░░░░█"
 echo -e "${R} ███████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████"
 				echo ""
-				echo "Ubuntu cyberpatriot tool, Written by corbin parrish"
+				echo "Ubuntu cyberpatriot tool, Written by nobody65534"
 				echo ""
 				echo "You are operating in $currentdirectory"
 				echo ""
