@@ -1,5 +1,5 @@
 - Copy script
-- open nano and call it ubuntool
+- open nano and call it ubuntool then click enter
 - paste the script
 - close nano via ctrl+x then press y then press enter
 - type chmod 755 ./ubuntool then press enter
