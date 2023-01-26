@@ -5,8 +5,11 @@
 
 
 
-# The left codes
-The codes on the left are simple.
-[T]: Tested on a cyberpatriot image.
-[U]: Tested on a personal vm, but not on a cyberpatriot image.
-[S]: Not tested at all
+
+The codes are simple
+Just have a terminal handy|
+there is a instruction wiki
+Happy scripting
+#all bash scripts have been tested on a cyberpatriot image
+
+
