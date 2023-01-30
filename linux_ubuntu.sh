@@ -323,7 +323,7 @@ createUser() {
 
 ##Changes all the user passwords
 chgPasswd(){
-echo "$LogTime uss: [$UserName]# Changing all the user passwords to Cyb3rPatr!0t$." >> output.log
+echo "$LogTime uss: [$UserName]# Changing all the user passwords to WherestheB334!$." >> output.log
 	##Look for valid users that have different UID that not 1000+
 	cut -d: -f1,3 /etc/passwd | egrep ':[0-9]{4}$' | cut -d: -f1 > users
 	##Looks for users with the UID and GID of 0
