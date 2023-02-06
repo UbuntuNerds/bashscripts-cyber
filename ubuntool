@@ -259,7 +259,42 @@ for user in "${users_to_delete[@]}"; do
   echo "$user deleted" >> ubuntoollog
 done
 pause
+# This script will fix common issues in linux
+echo "Starting system repair..."
+
+# Update the system
+echo "Updating system..."
+sudo apt-get update
+
+# Upgrade the system
+echo "Upgrading system..."
+sudo apt-get upgrade -y
+
+# Clean up system
+echo "Cleaning up system..."
+sudo apt-get autoremove -y
+
+# Clean up cache
+echo "Cleaning up system cache..."
+sudo apt-get clean
+
+# Fix broken packages
+echo "Fixing broken packages..."
+sudo apt-get install -f
+
+# Repair grub bootloader
+echo "Repairing grub bootloader..."
+sudo grub-install /dev/sda
+sudo update-grub
+
+# Repair disk errors
+echo "Repairing disk errors..."
+sudo fsck -a /dev/sda
+
+echo "System repair finished!"
+done
 }
+
 menu(){
 echo -e "${R} ███████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████"
 echo -e "${G} █░░░░░░██░░░░░░█░░░░░░░░░░░░░░███░░░░░░██░░░░░░█░░░░░░██████████░░░░░░█░░░░░░░░░░░░░░█░░░░░░░░░░░░░░█░░░░░░░░░░░░░░█░░░░░░█████████"
@@ -287,6 +322,7 @@ echo -e "${R} ██████████████████████
 				echo "[7] List hidden users             [8] Delete media files "
 				echo "[9] Add critical services         [10] Delete and modify users"
 				echo "[11] Update system                [12] Reinstall a package"
+				echo "[13] Common issues"
 if [ "$UserName" != "root" ]
 then
 echo "It is required that you run this script as root."
@@ -315,6 +351,8 @@ read_options(){
 			7) hiddenusers;;
 			9) critservices;;
 			12) reinstall;;
+			13) commonissues;;
+
         	esac
 
 }
